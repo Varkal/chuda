@@ -1,7 +1,10 @@
 from setuptools import setup
 
-with open('README.MD') as readme_file:
-    README = readme_file.read()
+try:
+    with open('README.MD') as readme_file:
+        README = readme_file.read()
+except FileNotFoundError:
+    README = ""
 
 VERSION = '0.0.4'
 
