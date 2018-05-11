@@ -144,9 +144,9 @@ class App:
                 handler["level"] = "DEBUG"
                 logging_config["handlers"][name] = handler
 
-            for name, logging_configer in logging_config.get("loggers", {}).items():
-                logging_config["level"] = "DEBUG"
-                logging_config["loggers"][name] = logging_configer
+            for name, logger in logging_config.get("loggers", {}).items():
+                logger["level"] = "DEBUG"
+                logging_config["loggers"][name] = logger
 
         self.config["logging"] = logging_config
         logging.config.dictConfig(self.config["logging"])
