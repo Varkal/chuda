@@ -2,9 +2,11 @@
 import sys
 import signal
 import os
-from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter
 
 sys.path.append('../chuda')
+from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter
+
+
 
 class ExampleSubcommand(Command):
     command_name = "foo"

@@ -63,12 +63,13 @@ class App:
             if argument.completer:
                 parg.completer = argument.completer
 
+
+        subcommands_dict = {}
         if self.subcommands:
             subparsers = self.parser.add_subparsers(
                 title="subcommands"
             )
-            subcommands_dict = {}
-
+            
         for subcommand in self.subcommands:
             instance = subcommand()
             subcommands_dict[instance.command_name] = instance
