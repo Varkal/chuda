@@ -1,9 +1,16 @@
-from distutils.core import setup
+from setuptools import setup
+
+with open('README.MD') as readme_file:
+    README = readme_file.read()
+
+VERSION = '0.0.2'
+
 setup(
     name='chuda',
-    packages=['chuda'], # this must be the same as the name above
-    version='0.0.1',
+    packages=['chuda'],
+    version=VERSION,
     description='A simple framework to create CLI tools',
+    long_description=README,
     license='MIT',
     install_requires=[
         "delegator.py>=0.1.0",
@@ -11,9 +18,9 @@ setup(
     ],
     author='Romain Moreau',
     author_email='moreau.romain83@gmail.com',
-    url='https://github.com/Varkal/chuda', # use the URL to the github repo
-    download_url='https://github.com/Varkal/chuda/archive/0.0.1.tar.gz', # I'll explain this in a second
-    keywords=['cli'], # arbitrary keywords
+    url='https://github.com/Varkal/chuda',
+    download_url='https://github.com/Varkal/chuda/archive/{}.tar.gz'.format(VERSION),
+    keywords=['cli'],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
