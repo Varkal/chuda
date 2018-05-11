@@ -3,7 +3,7 @@ from setuptools import setup
 with open('README.MD') as readme_file:
     README = readme_file.read()
 
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 setup(
     name='chuda',
