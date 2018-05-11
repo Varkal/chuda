@@ -3,7 +3,7 @@ from setuptools import setup
 with open('README.MD') as readme_file:
     README = readme_file.read()
 
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 
 setup(
     name='chuda',
@@ -20,7 +20,7 @@ setup(
     author_email='moreau.romain83@gmail.com',
     url='https://github.com/Varkal/chuda',
     download_url='https://github.com/Varkal/chuda/archive/{}.tar.gz'.format(VERSION),
-    keywords=['cli'],
+    keywords=['cli', 'chuda'],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
