@@ -19,7 +19,8 @@ default_logger_config = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "default",
-            "level": "INFO"
+            "level": "INFO",
+            "stream": "ext://sys.stdout"
         }
     },
     "loggers": {
