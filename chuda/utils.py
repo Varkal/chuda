@@ -3,6 +3,7 @@ Utils for Chuda internals
 '''
 
 import collections
+import logging
 
 default_logger_config = {
     "version": 1,
@@ -100,3 +101,11 @@ class Null(object):
     __reversed__ = nullify
     __contains__ = __missing__ = nullify
     __enter__ = __exit__ = nullify
+
+
+class LoggerMixin():
+
+    @property
+    def logger(self):
+        logger_name = getattr(self, "logger_name", "default")
+        return logging.getLogger(logger_name)
