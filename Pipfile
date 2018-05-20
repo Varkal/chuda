@@ -9,6 +9,7 @@ name = "pypi"
 
 "delegator.py" = "*"
 argcomplete = "*"
+crayons = "*"
 
 
 [dev-packages]

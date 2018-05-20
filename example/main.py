@@ -2,10 +2,10 @@
 import sys
 import signal
 import os
+import logging
 
 sys.path.append('../chuda')
 from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter
-
 
 
 class ExampleSubcommand(Command):
@@ -14,23 +14,28 @@ class ExampleSubcommand(Command):
 
     def main(self):
         process = self.shell.run("ls")
-        self.logger.info(process.out)
+        command = self.app.subcommands["bar"]
+        command.arguments.protocol = "http"
+        command.run()
+        self.logger.info(process.output)
+
 
 class ExampleSubcommand2(Command):
     command_name = "bar"
     description = "the ultimate bar subcommand"
 
     arguments = [
-        Parameter(name="protocol", choices=["http", "https", "ftp", "sftp"])
+        Parameter(name="protocol", nargs="?")
     ]
 
     def main(self):
-        self.logger.info(self.arguments.message)
+        self.logger.info(self.arguments.protocol)
 
 
 class Pipo(Plugin):
     def on_create(self):
         self.enrich_app("pipo", 12)
+
 
 @autorun()
 class ExampleApp(App):
@@ -45,21 +50,19 @@ class ExampleApp(App):
     ]
 
     arguments = [
-        Option(name=["-t", "--test"], dest="test", default="empty")
+        Option(name=["-t", "--test"], dest="test")
     ]
 
     subcommands = [ExampleSubcommand, ExampleSubcommand2]
 
     @signal_handler(signal.SIGINT)
-    def handle_ctrl_c(self, signum, frame): #pylint: disable=W0613
-        print("ctrl_C")
+    def handle_ctrl_c(self, signum, frame):  # pylint: disable=W0613
+        self.logger.info("ctrl_C")
         sys.exit(2)
 
     def main(self):
-        self.logger.debug("test")
-        self.logger.info(self.app_name)
-        self.logger.info(self.arguments.test)
-        self.logger.info(self.pipo) #pylint: disable=E1101
-        self.logger.info(self.config["myconfig"]["a"])
-
-        # signal.pause()
+        self.logger.debug("debug")
+        self.logger.info("info")
+        self.logger.warning("warn")
+        self.logger.error("error")
+        self.logger.critical("critical")

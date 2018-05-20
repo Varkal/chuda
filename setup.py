@@ -18,6 +18,7 @@ setup(
     install_requires=[
         "delegator.py>=0.1.0",
         "argcomplete>=1.9.4",
+        "crayons>=0.1.2"
     ],
     author='Romain Moreau',
     author_email='moreau.romain83@gmail.com',

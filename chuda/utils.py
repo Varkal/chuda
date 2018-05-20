@@ -4,6 +4,7 @@ Utils for Chuda internals
 
 import collections
 import logging
+import re
 
 default_logger_config = {
     "version": 1,
@@ -18,7 +19,7 @@ default_logger_config = {
     },
     "handlers": {
         "console": {
-            "class": "logging.StreamHandler",
+            "class": "chuda.logging.ColoredStreamHandler",
             "formatter": "default",
             "level": "INFO",
             "stream": "ext://sys.stdout"
@@ -102,6 +103,9 @@ class Null(object):
     __contains__ = __missing__ = nullify
     __enter__ = __exit__ = nullify
 
+def to_snake_case(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 class LoggerMixin():
 

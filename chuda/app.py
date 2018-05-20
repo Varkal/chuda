@@ -4,30 +4,40 @@ import logging
 import logging.config
 import importlib
 import signal
-import delegator
 import argcomplete
 import chuda.utils as utils
 from .arguments import Option
 from .plugins import Plugin
+from .shell import Runner
 
 
 class App:
     app_name = None
     arguments = []
+    arguments_declaration = []
     config = {}
     config_parser = "ini"
     config_path = None
     default_arguments = [
-        Option(name=["-q", "--quiet"], dest="quiet", action="store_true"),
-        Option(name=["-v", "--verbose"], dest="verbose", action="store_true"),
-        Option(name=["--version"], dest="version", action="store_true")
+        Option(
+            name=["-q", "--quiet"], dest="quiet", action="store_true",
+            help="make console output silent"
+        ),
+        Option(
+            name=["-v", "--verbose"], dest="verbose", action="store_true",
+            help="make console output more talkative"
+        ),
+        Option(
+            name=["--version"], dest="version", action="store_true",
+            help="show version and exit"
+        )
     ]
     description = None
     logger = None
     override_default_arguments = False
     parser = None
     plugins = []
-    shell = delegator
+    shell = Runner()
     subcommands = []
     version = "0.0.1"
 
@@ -63,13 +73,12 @@ class App:
             if argument.completer:
                 parg.completer = argument.completer
 
-
         subcommands_dict = {}
         if self.subcommands:
             subparsers = self.parser.add_subparsers(
                 title="subcommands"
             )
-            
+
         for subcommand in self.subcommands:
             instance = subcommand()
             subcommands_dict[instance.command_name] = instance
@@ -96,6 +105,8 @@ class App:
             argument_parser=self.parser,
             always_complete_options=False
         )
+
+        self.arguments_declaration = self.arguments
         self.arguments = self.parser.parse_args()
         self.subcommands = subcommands_dict
 
@@ -156,6 +167,8 @@ class App:
         else:
             self.logger = logging.getLogger("default")
 
+        self.shell.logger = self.logger
+
     def __init_plugins(self):
         instances = []
 
@@ -194,8 +207,8 @@ class App:
             handle_signal = getattr(attribute, "handle_signal", None)
             if handle_signal:
                 self.__signal_handlers \
-                         .setdefault(handle_signal, []) \
-                         .append(attribute)
+                    .setdefault(handle_signal, []) \
+                    .append(attribute)
 
         for plugin in self.plugins:
             for attribute_name in dir(plugin):
@@ -227,6 +240,11 @@ class App:
         self.call_plugins("on_arguments_parsed")
         self.__init_logging()
         self.call_plugins("on_logger_created")
+        self.__setup_subcommands()
+
+    def __setup_subcommands(self):
+        for _, command in self.subcommands.items():
+            command.setup(self)
 
     def run(self):
         self.call_plugins("on_run")
@@ -235,10 +253,8 @@ class App:
         else:
             if self.arguments.command == "main":
                 self.main()
-            else:
-                command = self.subcommands[self.arguments.command]
-                command.setup(self.arguments, self.config, self.logger)
-                command.main()
+            else:            
+                self.subcommands[self.arguments.command].run()
         self.call_plugins("on_end")
 
     def main(self):
