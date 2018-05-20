@@ -146,7 +146,7 @@ class App:
                         utils.dict_merge(self.config, tmp)
 
     def __init_logging(self):
-        logging_config = utils.default_logger_config
+        logging_config = utils.DEFAULT_LOGGER_CONFIG
         if self.config.get("logging", None):
             utils.dict_merge(logging_config, self.config["logging"])
 
@@ -253,7 +253,7 @@ class App:
         else:
             if self.arguments.command == "main":
                 self.main()
-            else:            
+            else:
                 self.subcommands[self.arguments.command].run()
         self.call_plugins("on_end")
 

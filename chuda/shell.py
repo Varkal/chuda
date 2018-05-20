@@ -95,7 +95,7 @@ class ShellCommand():
     def wait_for(self, pattern, timeout=None):
         should_continue = True
 
-        def stop(signum, frame):  # pylint: disable=W0613        
+        def stop(signum, frame):  # pylint: disable=W0613
             nonlocal should_continue
             if should_continue:
                 raise TimeoutError()

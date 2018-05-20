@@ -2,10 +2,9 @@
 import sys
 import signal
 import os
-import logging
 
 sys.path.append('../chuda')
-from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter
+from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter # pylint: disable=C0413
 
 
 class ExampleSubcommand(Command):

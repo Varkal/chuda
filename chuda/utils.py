@@ -6,7 +6,7 @@ import collections
 import logging
 import re
 
-default_logger_config = {
+DEFAULT_LOGGER_CONFIG = {
     "version": 1,
     "formatters": {
         "default": {
@@ -104,8 +104,8 @@ class Null(object):
     __enter__ = __exit__ = nullify
 
 def to_snake_case(name):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    s_1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s_1).lower()
 
 class LoggerMixin():
 

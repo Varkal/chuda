@@ -23,5 +23,5 @@ class ColoredStreamHandler(StreamHandler):
             self.flush()
         except (KeyboardInterrupt, SystemExit):
             raise
-        except:
+        except: # pylint: disable=W0702
             self.handleError(record)

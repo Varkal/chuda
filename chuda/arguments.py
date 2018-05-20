@@ -23,7 +23,7 @@ class Argument:
     completer = None
 
     def __init__(self, name=None, action="store", nargs=None, const=None,
-                 default=None, type=None, choices=None, required=None, help=None,
+                 default=None, type=None, choices=None, required=None, help=None, # pylint: disable=W0622
                  metavar=None, dest=None, completer=None):
         self.name = name
         self.action = action

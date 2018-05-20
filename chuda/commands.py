@@ -1,10 +1,6 @@
-'''
-'''
-
 import sys
 from .app import App
 from .arguments import Option, Parameter
-from .utils import to_snake_case
 
 
 class Command(App):
