@@ -10,6 +10,7 @@ name = "pypi"
 "delegator.py" = "*"
 argcomplete = "*"
 crayons = "*"
+pyyaml = "*"
 
 
 [dev-packages]

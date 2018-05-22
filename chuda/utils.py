@@ -103,9 +103,12 @@ class Null(object):
     __contains__ = __missing__ = nullify
     __enter__ = __exit__ = nullify
 
+
 def to_snake_case(name):
     s_1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    s_1 = s_1.replace("-", "_")
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s_1).lower()
+
 
 class LoggerMixin():
 
