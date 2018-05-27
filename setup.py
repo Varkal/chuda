@@ -6,7 +6,7 @@ try:
 except FileNotFoundError:
     README = ""
 
-VERSION = '0.0.15'
+VERSION = '0.0.16'
 
 setup(
     name='chuda',
@@ -16,7 +16,6 @@ setup(
     long_description=README,
     license='MIT',
     install_requires=[
-        "delegator.py>=0.1.0",
         "argcomplete>=1.9.4",
         "crayons>=0.1.2"
     ],
