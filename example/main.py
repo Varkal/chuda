@@ -12,11 +12,11 @@ class ExampleSubcommand(Command):
     description = "a foo subcommand"
 
     def main(self):
-        process = self.shell.run("ls")
+        process = self.shell.run("ls", cwd="/")
         command = self.app.subcommands["bar"]
         command.arguments.protocol = "http"
-        command.run()
         self.logger.info(process.output)
+        command.run()
 
 
 class ExampleSubcommand2(Command):

@@ -4,15 +4,14 @@ import subprocess
 import threading
 import re
 import signal
-
-import delegator
+import os
 
 NON_BLOCKING_ERROR_MESSAGE = "This method cannot be called on blocking shell commands"
 
 
 class ShellCommand():
 
-    def __init__(self, command, logger, block=True):
+    def __init__(self, command, logger, cwd=None, block=True):
         self.command = shlex.split(command)
         self.block = block
         self.process = None
@@ -23,6 +22,7 @@ class ShellCommand():
         self.old_error_size = 0
         self.logger = logger
         self.writer = None
+        self.cwd = cwd.replace("~", os.getenv("HOME"))
 
     def run(self):
         if not self.block:
@@ -31,31 +31,39 @@ class ShellCommand():
             self.thread = threading.Thread(target=self.run_non_blocking)
             self.thread.start()
         else:
-            self.process = delegator.run(self.command)
-            self.output = self.process.out
-            self.error = self.process.err
+            self.__create_process()
+            self.output = self.process.stdout.read().decode("utf-8")
+            self.error = self.process.stderr.read().decode("utf-8")
 
         return self
 
+    def __create_process(self):
+        self.process = subprocess.Popen(
+            self.command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            cwd=self.cwd
+        )
+
     def run_non_blocking(self):
         if not self.block:
-            self.process = subprocess.Popen(
-                self.command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                stdin=subprocess.PIPE
-            )
+            self.__create_process()
             self.writer = io.TextIOWrapper(
                 self.process.stdin,
                 encoding='utf-8',
                 line_buffering=True,  # send data on newline
             )
-            while self.process.poll() is None:
+            any_lines = True
+            while self.process.poll() is None or any_lines:
+                any_lines = False
                 stdout = self.process.stdout.readline()
                 stderr = self.process.stderr.readline()
                 if stdout:
+                    any_lines = True
                     self.output.append(stdout.strip().decode("utf-8"))
                 if stderr:
+                    any_lines = True
                     self.error.append(stderr.strip().decode("utf-8"))
             return self.process.poll()
 
@@ -136,8 +144,12 @@ class ShellCommand():
 
 
 class Runner():
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, cwd=None):
         self.logger = logger
+        self.cwd = cwd
 
-    def run(self, command, block=True):
-        return ShellCommand(command=command, logger=self.logger, block=block).run()
+    def run(self, command, block=True, cwd=None):
+        if cwd is None:
+            cwd = self.cwd
+
+        return ShellCommand(command=command, logger=self.logger, block=block, cwd=cwd).run()
