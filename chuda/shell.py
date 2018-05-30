@@ -22,7 +22,10 @@ class ShellCommand():
         self.old_error_size = 0
         self.logger = logger
         self.writer = None
-        self.cwd = cwd.replace("~", os.getenv("HOME"))
+        if cwd:
+            self.cwd = cwd.replace("~", os.getenv("HOME"))
+        else:
+            self.cwd = None
 
     def run(self):
         if not self.block:
