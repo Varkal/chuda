@@ -22,6 +22,7 @@ class ShellCommand():
         self.old_error_size = 0
         self.logger = logger
         self.writer = None
+        self.return_code = -1
         if cwd:
             self.cwd = cwd.replace("~", os.getenv("HOME"))
         else:
@@ -35,8 +36,10 @@ class ShellCommand():
             self.thread.start()
         else:
             self.__create_process()
+            self.process.wait()
             self.output = self.process.stdout.read().decode("utf-8")
             self.error = self.process.stderr.read().decode("utf-8")
+            self.return_code = self.process.returncode 
 
         return self
 
@@ -68,6 +71,7 @@ class ShellCommand():
                 if stderr:
                     any_lines = True
                     self.error.append(stderr.strip().decode("utf-8"))
+            self.return_code = self.process.poll()
             return self.process.poll()
 
         raise TypeError(NON_BLOCKING_ERROR_MESSAGE)
@@ -125,7 +129,11 @@ class ShellCommand():
         if self.block:
             return False
 
-        return self.thread.is_alive() or self.process.poll() is not None
+        return self.thread.is_alive() or self.process.poll() is None
+
+    def wait(self):
+        while self.is_running():
+            pass
 
     def print_live_output(self):
         '''
