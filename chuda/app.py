@@ -58,7 +58,7 @@ class App:
             description=self.description
         )
 
-        self.parser.set_defaults(command="main")
+        # self.parser.set_defaults(command="main")
 
         if not self.override_default_arguments:
             self.arguments = self.default_arguments + self.arguments
@@ -108,6 +108,10 @@ class App:
 
         self.arguments_declaration = self.arguments
         self.arguments = self.parser.parse_args()
+
+        if getattr(self.arguments, "command", None) is None:
+            setattr(self.arguments, "command", "main")
+
         self.subcommands = subcommands_dict
 
     def __init_config(self):
