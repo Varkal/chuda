@@ -1,4 +1,5 @@
 from .utils import to_snake_case
+from pathlib import Path
 
 '''
 Module with argparse utils for chuda
@@ -25,6 +26,11 @@ class Argument:
     def __init__(self, name=None, action="store", nargs=None, const=None,
                  default=None, type=None, choices=None, required=None, help=None, # pylint: disable=W0622
                  metavar=None, dest=None, completer=None):
+        args = locals().copy()
+        for key, value in args.items():
+            if isinstance(value, Path):
+                locals()[key] = str(value)
+
         self.name = name
         self.action = action
         self.nargs = nargs

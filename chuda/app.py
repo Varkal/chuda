@@ -58,8 +58,6 @@ class App:
             description=self.description
         )
 
-        # self.parser.set_defaults(command="main")
-
         if not self.override_default_arguments:
             self.arguments = self.default_arguments + self.arguments
 
@@ -123,6 +121,8 @@ class App:
                 config_path_list = self.config_path
 
             for path in config_path_list:
+                path = str(path)
+
                 if os.path.isfile(path):
                     self.config_path = path
                     break

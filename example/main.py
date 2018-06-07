@@ -5,6 +5,7 @@ import os
 
 sys.path.append('../chuda')
 from chuda import App, autorun, Command, Plugin, signal_handler, Option, Parameter # pylint: disable=C0413
+from pathlib import Path
 
 
 class ExampleSubcommand(Command):
@@ -12,12 +13,7 @@ class ExampleSubcommand(Command):
     description = "a foo subcommand"
 
     def main(self):
-        process = self.shell.run("ls -", cwd="/", block=True)
-        command = self.app.subcommands["bar"]
-        command.arguments.protocol = "http"
-        process.wait()
-        self.logger.warning(process.return_code)
-        command.run()
+        self.logger.info(self.arguments.path)
 
 
 class ExampleSubcommand2(Command):
@@ -42,7 +38,7 @@ class ExampleApp(App):
     app_name = "example"
     description = "example software"
 
-    config_path = ["./config.yml", os.path.dirname(os.path.abspath(__file__))+"/config.yml"]
+    config_path = ["./config.yml", Path(os.path.abspath(__file__)) / "../config.yml"]
     config_parser = "yaml"
 
     plugins = [
@@ -50,7 +46,8 @@ class ExampleApp(App):
     ]
 
     arguments = [
-        Option(name=["-t", "--test"], dest="test")
+        Option(name=["-t", "--test"], dest="test"),
+        Option(name=["-p", "--path"], default=Path(".") / "toto")
     ]
 
     subcommands = [ExampleSubcommand, ExampleSubcommand2]
