@@ -113,41 +113,7 @@ class App:
         self.subcommands = subcommands_dict
 
     def __init_config(self):
-        if self.config_path:
-            config_path_list = []
-            if isinstance(self.config_path, str):
-                config_path_list = [self.config_path]
-            elif isinstance(self.config_path, list):
-                config_path_list = self.config_path
-
-            for path in config_path_list:
-                path = str(path)
-
-                if os.path.isfile(path):
-                    self.config_path = path
-                    break
-                else:
-                    self.config_path = None
-
-            if self.config_path:
-                if self.config_parser.lower() == "ini":
-                    configparser = importlib.import_module("configparser")
-                    tmp = configparser.ConfigParser()
-                    tmp.read(self.config_path)
-                    for section in tmp.sections():
-                        utils.dict_merge(self.config, {section: tmp[section]})
-
-                if self.config_parser.lower() == "yaml":
-                    yaml = importlib.import_module("yaml")
-                    with open(self.config_path, "r") as file:
-                        tmp = yaml.load(file.read())
-                        utils.dict_merge(self.config, tmp)
-
-                if self.config_parser.lower() == "json":
-                    json = importlib.import_module("json")
-                    with open(self.config_path, "r") as file:
-                        tmp = json.load(file)
-                        utils.dict_merge(self.config, tmp)
+        utils._init_config(self) #pylint: disable=W0212
 
     def __init_logging(self):
         logging_config = utils.DEFAULT_LOGGER_CONFIG

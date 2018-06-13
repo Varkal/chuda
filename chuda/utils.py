@@ -5,6 +5,8 @@ Utils for Chuda internals
 import collections
 import logging
 import re
+import os
+import importlib
 
 DEFAULT_LOGGER_CONFIG = {
     "version": 1,
@@ -111,8 +113,45 @@ def to_snake_case(name):
 
 
 class LoggerMixin():
-
     @property
     def logger(self):
         logger_name = getattr(self, "logger_name", "default")
         return logging.getLogger(logger_name)
+
+
+def _init_config(self):
+    if self.config_path:
+            config_path_list = []
+            if isinstance(self.config_path, str):
+                config_path_list = [self.config_path]
+            elif isinstance(self.config_path, list):
+                config_path_list = self.config_path
+
+            for path in config_path_list:
+                path = str(path)
+
+                if os.path.isfile(path):
+                    self.config_path = path
+                    break
+                else:
+                    self.config_path = None
+
+            if self.config_path:
+                if self.config_parser.lower() == "ini":
+                    configparser = importlib.import_module("configparser")
+                    tmp = configparser.ConfigParser()
+                    tmp.read(self.config_path)
+                    for section in tmp.sections():
+                        dict_merge(self.config, {section: tmp[section]})
+
+                if self.config_parser.lower() == "yaml":
+                    yaml = importlib.import_module("yaml")
+                    with open(self.config_path, "r") as file:
+                        tmp = yaml.load(file.read())
+                        dict_merge(self.config, tmp)
+
+                if self.config_parser.lower() == "json":
+                    json = importlib.import_module("json")
+                    with open(self.config_path, "r") as file:
+                        tmp = json.load(file)
+                        dict_merge(self.config, tmp)
