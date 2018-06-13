@@ -14,6 +14,9 @@ class ExampleSubcommand(Command):
 
     def main(self):
         self.logger.info(self.arguments.path)
+        self.app.subcommands["bar"].run()
+        process = self.shell.run("ls", stdout=None)
+        # self.logger.info(process.output)
 
 
 class ExampleSubcommand2(Command):
