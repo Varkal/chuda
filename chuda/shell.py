@@ -11,7 +11,7 @@ NON_BLOCKING_ERROR_MESSAGE = "This method cannot be called on blocking shell com
 
 class ShellCommand():
 
-    def __init__(self, command, logger, cwd=None, block=True):
+    def __init__(self, command, logger, cwd=None, block=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
         self.command = shlex.split(command)
         self.block = block
         self.process = None
@@ -23,6 +23,9 @@ class ShellCommand():
         self.logger = logger
         self.writer = None
         self.return_code = -1
+        self._stdin = stdin
+        self._stdout = stdout
+        self._stderr = stderr
         if cwd:
             self.cwd = cwd.replace("~", os.getenv("HOME"))
         else:
@@ -37,8 +40,10 @@ class ShellCommand():
         else:
             self.__create_process()
             self.process.wait()
-            self.output = self.process.stdout.read().decode("utf-8")
-            self.error = self.process.stderr.read().decode("utf-8")
+            if self._stdout is not None:
+                self.output = self.process.stdout.read().decode("utf-8")
+            if self._stderr is not None:
+                self.error = self.process.stderr.read().decode("utf-8")
             self.return_code = self.process.returncode 
 
         return self
@@ -46,38 +51,45 @@ class ShellCommand():
     def __create_process(self):
         self.process = subprocess.Popen(
             self.command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            stdin=subprocess.PIPE,
+            stdout=self._stdout,
+            stderr=self._stderr,
+            stdin=self._stdin,
             cwd=self.cwd
         )
 
     def run_non_blocking(self):
         if not self.block:
             self.__create_process()
-            self.writer = io.TextIOWrapper(
-                self.process.stdin,
-                encoding='utf-8',
-                line_buffering=True,  # send data on newline
-            )
+
+            if self._stdin is not None:
+                self.writer = io.TextIOWrapper(
+                    self.process.stdin,
+                    encoding='utf-8',
+                    line_buffering=True,  # send data on newline
+                )
             any_lines = True
             while self.process.poll() is None or any_lines:
                 any_lines = False
-                stdout = self.process.stdout.readline()
-                stderr = self.process.stderr.readline()
-                if stdout:
+
+                if self._stdout is not None:
+                    stdout = self.process.stdout.readline()
+                if self._stderr is not None:
+                    stderr = self.process.stderr.readline()
+
+                if self._stdout is not None and stdout:
                     any_lines = True
                     self.output.append(stdout.strip().decode("utf-8"))
-                if stderr:
+                if self._stderr is not None and stderr:
                     any_lines = True
                     self.error.append(stderr.strip().decode("utf-8"))
+
             self.return_code = self.process.poll()
             return self.process.poll()
 
         raise TypeError(NON_BLOCKING_ERROR_MESSAGE)
 
     def send(self, value):
-        if not self.block:
+        if not self.block and self._stdin is not None:
             self.writer.write("{}\n".format(value))
         else:
             raise TypeError(NON_BLOCKING_ERROR_MESSAGE)
@@ -143,12 +155,12 @@ class ShellCommand():
             raise TypeError(NON_BLOCKING_ERROR_MESSAGE)
         else:
             while self.thread.is_alive() or self.old_output_size < len(self.output) or self.old_error_size < len(self.error):
-                if len(self.output) > self.old_output_size:
+                if self._stdout is not None and len(self.output) > self.old_output_size:
                     while self.old_output_size < len(self.output):
                         self.logger.info(self.output[self.old_output_size])
                         self.old_output_size += 1
 
-                if len(self.error) > self.old_error_size:
+                if self._stderr is not None and len(self.error) > self.old_error_size:
                     while self.old_error_size < len(self.error):
                         self.logger.error(self.error[self.old_error_size])
                         self.old_error_size += 1
@@ -159,8 +171,8 @@ class Runner():
         self.logger = logger
         self.cwd = cwd
 
-    def run(self, command, block=True, cwd=None):
+    def run(self, command, block=True, cwd=None, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
         if cwd is None:
             cwd = self.cwd
 
-        return ShellCommand(command=command, logger=self.logger, block=block, cwd=cwd).run()
+        return ShellCommand(command=command, logger=self.logger, block=block, cwd=cwd, stdin=stdin, stdout=stdout, stderr=stderr).run()
