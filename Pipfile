@@ -23,4 +23,9 @@ rope = "*"
 
 [requires]
 
-python_version = "3.4"
+python_version = "3.6"
+
+[scripts]
+
+clean = "rm -rf chuda.egg-info dist"
+build = "python setup.py sdist"
