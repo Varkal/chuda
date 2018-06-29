@@ -29,3 +29,4 @@ python_version = "3.6"
 
 clean = "rm -rf chuda.egg-info dist"
 build = "python setup.py sdist"
+doc = "make -C docs html"
