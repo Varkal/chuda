@@ -1,9 +1,8 @@
-from .utils import to_snake_case
-from pathlib import Path
-
 '''
 Module with argparse utils for chuda
 '''
+from pathlib import Path
+from .utils import to_snake_case
 
 
 class Argument:
@@ -24,7 +23,7 @@ class Argument:
     completer = None
 
     def __init__(self, name=None, action="store", nargs=None, const=None,
-                 default=None, type=None, choices=None, required=None, help=None, # pylint: disable=W0622
+                 default=None, type=None, choices=None, required=None, help=None,  # pylint: disable=W0622
                  metavar=None, dest=None, completer=None):
         args = locals().copy()
         for key, value in args.items():
@@ -60,7 +59,7 @@ class Argument:
 
 class Option(Argument):
     '''
-    Represent an option on the command-line (--whatever)
+    Represent an option on the command-line (mycommand --whatever)
     '''
 
     def __repr__(self):
@@ -90,7 +89,7 @@ class Option(Argument):
 
 class Parameter(Argument):
     '''
-    Represent a parameter on the command-line (macommand whatever)
+    Represent a parameter on the command-line (mycommand whatever)
     '''
 
     def __repr__(self):

@@ -2,7 +2,6 @@ import os
 import argparse
 import logging
 import logging.config
-import importlib
 import signal
 import argcomplete
 import chuda.utils as utils
@@ -12,12 +11,30 @@ from .shell import Runner
 
 
 class App:
-    app_name = None
+    """
+    Base class for create an application in chuda
+    """
+
+    #: Name of the application, show in the help and version strings
+    app_name = ""
+
+    #: List of :class:`~chuda.arguments.Argument` objects. Replace with the argparse.Namespace at runtime
     arguments = []
+
+    #: :attr:`~chuda.app.App.arguments` will be copied here of before it be replaced with namespace
     arguments_declaration = []
+
+    #: The configuration file will be loaded here
     config = {}
+
+    #: The parser used to parse the configuration file.
+    #: Possible values are: ini, json, yaml
     config_parser = "ini"
-    config_path = None
+
+    #: Acceptable paths to find the configuration file. 
+    #: Stop searching on the first one exists
+    config_path = []
+
     default_arguments = [
         Option(
             name=["-q", "--quiet"], dest="quiet", action="store_true",
@@ -32,8 +49,14 @@ class App:
             help="show version and exit"
         )
     ]
-    description = None
+
+    #: Description of the command. Print in help
+    description = ""
+
+    #: Instance of logging.Logger
     logger = None
+
+    #: Should 
     override_default_arguments = False
     parser = None
     plugins = []
@@ -113,7 +136,7 @@ class App:
         self.subcommands = subcommands_dict
 
     def __init_config(self):
-        utils._init_config(self) #pylint: disable=W0212
+        utils._init_config(self)  # pylint: disable=W0212
 
     def __init_logging(self):
         logging_config = utils.DEFAULT_LOGGER_CONFIG
