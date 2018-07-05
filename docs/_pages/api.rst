@@ -23,6 +23,12 @@ Arguments
 .. autoclass:: chuda.arguments.Parameter
     :members:
 
+Plugins
+-------
+
+.. autoclass:: chuda.plugins.Plugin
+    :members:
+
 Shell
 -----
 
