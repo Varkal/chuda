@@ -29,6 +29,12 @@ Plugins
 .. autoclass:: chuda.plugins.Plugin
     :members:
 
+Decorators
+----------
+
+.. automodule:: chuda.decorators
+    :members:
+
 Shell
 -----
 

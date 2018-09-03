@@ -8,15 +8,41 @@ class Command:
     '''
     A subcommand for multicommands cli tool
     '''
+
+    #: Name of the command, use on the command-line (like "add", in "git add")
     command_name = None
-    parent_config = None
+
+    #: Should use config_parser and config_path to generate a config for this command
     use_subconfig = False
-    app = None
-    merge_parent_arguments = True
-    arguments = []
-    arguments_declaration = None
-    logger = None
+
+    #: The configuration file will be loaded here
     config = {}
+
+    #: The parser used to parse the configuration file.
+    #: Possible values are: ini, json, yaml
+    config_parser = "ini"
+
+    #: Acceptable paths to find the configuration file.
+    #: Stop searching on the first one exists
+    config_path = []
+    
+    #: Contains a reference to the :class:`~chuda.app.App` instance who contains this Command
+    app = None
+
+    #: Should parent arguments be merge with local arguments ? True by default.
+    merge_parent_arguments = True
+
+    #: List of :class:`~chuda.arguments.Argument` objects. Replace with the argparse.Namespace at runtime
+    arguments = []
+
+    #: :attr:`~chuda.app.App.arguments` will be copied here of before it be replaced with namespace
+    #: **Warning**: This will contains **only** local arguments declarations  
+    arguments_declaration = None
+
+    #: Instance of :class:`~logging.Logger`
+    logger = None
+
+    #: Instance of :class:`~chuda.shell.Runner`
     shell = Runner()
 
     def __str__(self):
@@ -31,7 +57,7 @@ class Command:
     def main(self):
         pass
 
-    def check_arguments(self):
+    def __check_arguments(self):
         try:
             for declaration in self.arguments_declaration:
                 if declaration.dest:
@@ -56,7 +82,10 @@ class Command:
         return True
 
     def run(self):
-        if self.check_arguments():
+        """
+        Run the command
+        """
+        if self.__check_arguments():
             self.main()
 
     def setup(self, app):
@@ -71,11 +100,10 @@ class Command:
             sys.exit(1)
 
         self.app = app
-        self.parent_config = app.config
         self.arguments_declaration = self.arguments
         self.arguments = app.arguments
 
         if self.use_subconfig:
             _init_config(self)
         else:
-            self.config = self.parent_config
+            self.config = self.app.config

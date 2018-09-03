@@ -7,8 +7,11 @@ from .utils import to_snake_case
 
 class Argument:
     '''
-    Abstract parent class for Option and Parameter
+    Abstract parent class for :class:`~chuda.arguments.Option` and :class:`~chuda.arguments.Parameter`.
+
+    For attributes who are not documented here, please see :meth:`~argparse.ArgumentParser.add_argument` documentation
     '''
+
     name = None
     action = "store"
     nargs = None
@@ -20,6 +23,9 @@ class Argument:
     help = None
     metavar = None
     dest = None
+
+    #: Callable use by argcomplete to generate auto completion
+    #: (see `arcomplete documentation <https://argcomplete.readthedocs.io/en/latest/#specifying-completers>`_)
     completer = None
 
     def __init__(self, name=None, action="store", nargs=None, const=None,
@@ -44,6 +50,10 @@ class Argument:
         self.completer = completer
 
     def convert_to_argument(self):
+        '''
+            Convert the Argument object to a tuple use in :meth:`~argparse.ArgumentParser.add_argument` calls on the parser
+        '''
+
         field_list = [
             "action", "nargs", "const", "default", "type",
             "choices", "required", "help", "metavar", "dest"
@@ -59,7 +69,10 @@ class Argument:
 
 class Option(Argument):
     '''
-    Represent an option on the command-line (mycommand --whatever)
+    Represent an option on the command-line (``mycommand --whatever``)
+
+    Attributes:
+        name (list): Options can have multiple names, so name **must** be a list or a tuple
     '''
 
     def __repr__(self):
@@ -69,6 +82,14 @@ class Option(Argument):
         return "<Option name={}>".format(self.name)
 
     def get_default_name(self):
+        '''
+        Return the default generated name to store value on the parser for this option.
+
+        eg. An option *['-s', '--use-ssl']* will generate the *use_ssl* name 
+
+        Returns:
+            str: the default name of the option
+        '''
         long_names = [name for name in self.name if name.startswith("--")]
         short_names = [name for name in self.name if not name.startswith("--")]
 
@@ -89,7 +110,10 @@ class Option(Argument):
 
 class Parameter(Argument):
     '''
-    Represent a parameter on the command-line (mycommand whatever)
+    Represent a parameter on the command-line (``mycommand whatever``)
+
+    Attributes:
+        name (str): Parameter can have only one name, so it **must** be a string
     '''
 
     def __repr__(self):
