@@ -86,7 +86,7 @@ class App:
         """
         Check if you are currently in an autocomplete call
 
-        Returns: 
+        Returns:
             bool: True if you are in an autocomplete call, else False
 
         """

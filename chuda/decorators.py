@@ -1,6 +1,6 @@
 def autorun():
     '''
-    The run mtehod of the decorated class will be called if the current file is the main file
+    Call the run method of the decorated class if the current file is the main file
     '''
     def wrapper(cls):
 
