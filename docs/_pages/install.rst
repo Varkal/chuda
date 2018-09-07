@@ -23,7 +23,7 @@ this Python installation guide can guide you through the process.
 Get the Source Code
 -------------------
 
-chuda is actively developed on GitHub, where the code is always available.
+chuda is developed on GitHub, where the code is always available.
 
 You can either clone the public repository:
 

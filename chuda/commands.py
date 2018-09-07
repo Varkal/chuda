@@ -35,8 +35,8 @@ class Command:
     #: List of :class:`~chuda.arguments.Argument` objects. Replace with the argparse.Namespace at runtime
     arguments = []
 
-    #: :attr:`~chuda.app.App.arguments` will be copied here of before it be replaced with namespace
-    #: **Warning**: This will contains **only** local arguments declarations  
+    #: | :attr:`~chuda.app.App.arguments` will be copied here of before it be replaced with namespace
+    #: | **Warning**: This will contains **only** local arguments declarations
     arguments_declaration = None
 
     #: Instance of :class:`~logging.Logger`

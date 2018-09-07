@@ -19,6 +19,7 @@ The User Guide
 .. toctree::
 
    _pages/install
+   _pages/quickstart
 
 The Api Guide
 --------------

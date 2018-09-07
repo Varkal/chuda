@@ -56,7 +56,7 @@ class App:
     #: Instance of :class:`~logging.Logger`
     logger = None
 
-    #: Should :attr:`~chuda.app.App.arguments` override defaukt provided arguments ?
+    #: Should :attr:`~chuda.app.App.arguments` override default provided arguments ?
     override_default_arguments = False
 
     #: Instance of :class:`~argparse.ArgumentParser`
