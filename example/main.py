@@ -71,10 +71,34 @@ class Pipo(Plugin):
 #         self.logger.critical("critical")
 
 
-from chuda import App, autorun
+from chuda import App, autorun, Plugin
+import requests
+
+
+class HttpPlugin(Plugin):
+    base_url = None
+
+    def on_create(self):
+        self.enrich_app("http", self)
+
+    def on_config_read(self):
+        try:
+            self.base_url = self.app.config["base_url"]
+        except KeyError:
+            self.base_url = "http://www.example.com"
+
+    def get_root(self):
+        return requests.get(self.base_url)
+
 
 @autorun()
-class ShellSyncApp(App):
+class HttpApp(App):
+    http = None
+
+    plugins = [
+        HttpPlugin()
+    ]
+
     def main(self):
-        process = self.shell.run("sleep 1")
-        self.logger.info(process.output)
+        response = self.http.get_root()
+        self.logger.info(response.text)

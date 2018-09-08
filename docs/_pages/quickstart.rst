@@ -194,3 +194,64 @@ Chuda gives you a simple interface to interop with other shell utils
             process = self.shell.run("ls")
             self.logger.info(process.output)
 
+If you want to perform a long-running job, you can start it asynchronously
+
+.. code-block:: python
+
+    from chuda import App, autorun
+    import time
+
+    @autorun()
+    class ShellAsyncApp(App):
+        def main(self):
+            process = self.shell.run("sleep 3", block=False)
+            while process.is_running():
+                self.logger.info("Do something...")
+                time.sleep(1)
+
+Add plugins
+-----------
+
+Chuda apps encourage separation of concerns with a system of plugins
+
+A plugin is created by extend the :class:`~chuda.plugins.Plugin` class
+
+.. code-block:: python
+
+    from chuda import App, autorun, Plugin
+    import requests
+
+
+    class HttpPlugin(Plugin):
+        base_url = None
+
+        def on_create(self):
+            self.enrich_app("http", self)
+
+        def on_config_read(self):
+            try:
+                self.base_url = self.app.config["base_url"]
+            except KeyError:
+                self.base_url = "http://www.example.com"
+
+        def get_root(self):
+            return requests.get(self.base_url)
+
+
+    @autorun()
+    class HttpApp(App):
+        http = None
+
+        plugins = [
+            HttpPlugin()
+        ]
+
+        def main(self):
+            response = self.http.get_root()
+            self.logger.info(response.text)
+
+Plugins provides mutliple methods to execute code at key points
+in the lifecycle of the application. See :class:`~chuda.plugins.Plugin`
+documentation for more informations
+
+
