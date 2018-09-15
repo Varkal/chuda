@@ -11,6 +11,7 @@ name = "pypi"
 argcomplete = "*"
 crayons = "*"
 pyyaml = "*"
+sphinx = "*"
 
 
 [dev-packages]
@@ -19,13 +20,17 @@ cached-property = "*"
 pylint = "*"
 rope = "*"
 "autopep8" = "*"
+"doc8" = "*"
+pygments = "*"
 
 
 [requires]
 
 python_version = "3.6"
 
+
 [scripts]
 
 clean = "rm -rf chuda.egg-info dist"
 build = "python setup.py sdist"
+doc = "make -C docs html"

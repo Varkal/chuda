@@ -1,15 +1,8 @@
-'''
-Module contains Chuda decorators
-'''
 def autorun():
     '''
-    This decorator automaticaly call the run method of this class if
-    it's in the main file
+    Call the run method of the decorated class if the current file is the main file
     '''
     def wrapper(cls):
-        '''
-        Wrapper for autorun
-        '''
 
         import inspect
         if inspect.getmodule(cls).__name__ == "__main__":
@@ -22,11 +15,11 @@ def autorun():
 def signal_handler(sig):
     '''
     Flag a method to be used as a signal handler
+
+    Args:
+        sig (signal): The signal, from the :mod:`~signal` module
     '''
     def wrapper(func):
-        '''
-        Wrapper for signal_handler
-        '''
         setattr(func, "handle_signal", sig)
         return func
 

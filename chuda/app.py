@@ -2,7 +2,6 @@ import os
 import argparse
 import logging
 import logging.config
-import importlib
 import signal
 import argcomplete
 import chuda.utils as utils
@@ -12,12 +11,30 @@ from .shell import Runner
 
 
 class App:
-    app_name = None
+    """
+    Base class for create an application in chuda
+    """
+
+    #: Name of the application, show in the help and version strings
+    app_name = ""
+
+    #: List of :class:`~chuda.arguments.Argument` objects. Replace with the argparse.Namespace at runtime
     arguments = []
+
+    #: :attr:`~chuda.app.App.arguments` will be copied here of before it be replaced with namespace
     arguments_declaration = []
+
+    #: The configuration file will be loaded here
     config = {}
+
+    #: The parser used to parse the configuration file.
+    #: Possible values are: ini, json, yaml
     config_parser = "ini"
-    config_path = None
+
+    #: Acceptable paths to find the configuration file.
+    #: Stop searching on the first one exists
+    config_path = []
+
     default_arguments = [
         Option(
             name=["-q", "--quiet"], dest="quiet", action="store_true",
@@ -32,13 +49,29 @@ class App:
             help="show version and exit"
         )
     ]
-    description = None
+
+    #: Description of the command. Print in help
+    description = ""
+
+    #: Instance of :class:`~logging.Logger`
     logger = None
+
+    #: Should :attr:`~chuda.app.App.arguments` override default provided arguments ?
     override_default_arguments = False
+
+    #: Instance of :class:`~argparse.ArgumentParser`
     parser = None
+
+    #: List of Plugins
     plugins = []
+
+    #: Instance of :class:`~chuda.shell.Runner`
     shell = Runner()
+
+    #: List of :class:`~chuda.command.Command`
     subcommands = []
+
+    #: version of your application. Display withe --version flag
     version = "0.0.1"
 
     __signal_handlers = {}
@@ -50,6 +83,13 @@ class App:
         return "<ChudaApp app_name={}>".format(self.app_name)
 
     def in_autocomplete_mode(self):
+        """
+        Check if you are currently in an autocomplete call
+
+        Returns:
+            bool: True if you are in an autocomplete call, else False
+
+        """
         return "_ARGCOMPLETE" in os.environ
 
     def __init_arguments(self):
@@ -113,7 +153,7 @@ class App:
         self.subcommands = subcommands_dict
 
     def __init_config(self):
-        utils._init_config(self) #pylint: disable=W0212
+        utils._init_config(self)  # pylint: disable=W0212
 
     def __init_logging(self):
         logging_config = utils.DEFAULT_LOGGER_CONFIG
@@ -161,7 +201,10 @@ class App:
 
     def call_plugins(self, step):
         '''
-        Check if a 'step' method exist on each plugin, and call it
+        For each plugins, check if a "step" method exist on it, and call it
+
+        Args:
+            step (str): The method to search and call on each plugin
         '''
         for plugin in self.plugins:
             try:
@@ -217,6 +260,9 @@ class App:
             command.setup(self)
 
     def run(self):
+        """
+        Run the application
+        """
         self.call_plugins("on_run")
         if vars(self.arguments).get("version", None):
             self.logger.info("{app_name}: {version}".format(app_name=self.app_name, version=self.version))
@@ -228,5 +274,9 @@ class App:
         self.call_plugins("on_end")
 
     def main(self):
+        """
+        Main method of the application when the program is started without any subcommand selected. 
+        If this is not overrided, it will print the help
+        """
         if not utils.get_flag(self.arguments, "quiet"):
             self.parser.print_help()

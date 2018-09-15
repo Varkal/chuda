@@ -4,7 +4,7 @@ Module for Chuda Plugins
 class Plugin:
     '''
     Class represent a Plugin for a Chuda application
-    A plugin can register hooks for import step in application lifecycle
+    A plugin can register hooks for steps in the application lifecycle
     or enrich the app with new properties
     '''
     priority = 0
@@ -20,7 +20,11 @@ class Plugin:
 
     def enrich_app(self, name, value):
         '''
-        Add a new property to the app
+        Add a new property to the app (with setattr)
+
+        Args:
+            name (str): the name of the new property
+            value (any): the value of the new property
         '''
         #Method shouldn't be added:  https://stackoverflow.com/a/28060251/3042398
         if type(value) == type(self.enrich_app):
