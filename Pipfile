@@ -1,36 +1,28 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 "delegator.py" = "*"
 argcomplete = "*"
 crayons = "*"
 pyyaml = "*"
 sphinx = "*"
 
-
 [dev-packages]
-
 cached-property = "*"
 pylint = "*"
 rope = "*"
 "autopep8" = "*"
 "doc8" = "*"
 pygments = "*"
-
+sphinx-rtd-theme = "*"
 
 [requires]
-
 python_version = "3.6"
 
-
 [scripts]
-
 clean = "rm -rf chuda.egg-info dist"
 build = "python setup.py sdist"
 doc = "make -C docs html"
