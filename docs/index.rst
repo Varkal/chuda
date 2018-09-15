@@ -28,6 +28,13 @@ The Api Guide
 
    _pages/api
 
+Miscellaneous
+-------------
+
+.. toctree::
+
+    _pages/version
+
 Indices and tables
 ------------------
 
