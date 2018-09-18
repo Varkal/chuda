@@ -9,6 +9,8 @@ argcomplete = "*"
 crayons = "*"
 pyyaml = "*"
 sphinx = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [dev-packages]
 cached-property = "*"
