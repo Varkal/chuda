@@ -2,11 +2,14 @@ from unittest.mock import patch
 from functools import wraps
 
 
-depth = lambda L: isinstance(L, list) and max(map(depth, L))+1
+def depth(list_):
+    return isinstance(list_, list) and max(map(depth, list_))+1
+
 
 def argv(*args):
     arguments = list(args)
-    def decorator(fun):        
+
+    def decorator(fun):
         @wraps(fun)
         def wrapper(*args, **kwargs):
             if depth(arguments) == 1:

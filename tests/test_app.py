@@ -1,3 +1,5 @@
+
+import pytest
 from chuda.app import App
 from .utils import argv
 
@@ -61,8 +63,7 @@ def test_verbose(capsys):
     [TEST_STRING, "--help"],
     [TEST_STRING, "-h"]
 )
-def test_help(mocker):
-    app = BasicApp()
-    mocker.spy(app.parser, "print_help")
-    app.run()
-    assert getattr(app.parser.print_help, "call_count") == 1
+def test_help():
+    with pytest.raises(SystemExit):
+        app = BasicApp()
+        app.run()
