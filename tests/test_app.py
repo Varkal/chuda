@@ -1,11 +1,10 @@
 
 import pytest
 from chuda.app import App
-from .utils import argv
+from .utils import pipoargv, new_argv
 
 
 TEST_STRING = "Test"
-
 
 class BasicApp(App):
     app_name = "basic_app"
@@ -29,7 +28,7 @@ def test_output(capsys):
     assert stdout == TEST_STRING+"\n"
 
 
-@argv(
+@new_argv(
     [TEST_STRING, "--quiet"],
     [TEST_STRING, "-q"]
 )
@@ -40,7 +39,7 @@ def test_quiet(capsys):
     assert stdout == ""
 
 
-@argv(TEST_STRING, "--version")
+@pipoargv(TEST_STRING, "--version")
 def test_version(capsys):
     app = BasicApp()
     app.run()
@@ -48,7 +47,7 @@ def test_version(capsys):
     assert stdout == "{}: {}\n".format(app.app_name, app.version)
 
 
-@argv(
+@pipoargv(
     [TEST_STRING, "--verbose"],
     [TEST_STRING, "-v"]
 )
@@ -59,7 +58,7 @@ def test_verbose(capsys):
     assert stdout == "{}\n{}\n".format(TEST_STRING, TEST_STRING)
 
 
-@argv(
+@pipoargv(
     [TEST_STRING, "--help"],
     [TEST_STRING, "-h"]
 )

@@ -1,9 +1,9 @@
 from chuda import App, Parameter, Option
-from .utils import argv
+from .utils import pipoargv
 
 TEST_STRING = "test_value"
 
-@argv("test_program", TEST_STRING)
+@pipoargv("test_program", TEST_STRING)
 def test_basic_arguments(capsys):
     class BasicArgsApp(App):
 
