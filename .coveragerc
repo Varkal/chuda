@@ -4,3 +4,5 @@ exclude_lines=
     def __repr__
     def __str__
     pass
+omit=
+    chuda/logging.py
