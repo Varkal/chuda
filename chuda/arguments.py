@@ -96,7 +96,7 @@ class Option(Argument):
         if long_names:
             return to_snake_case(long_names[0].lstrip("-"))
 
-        return to_snake_case(short_names[0])
+        return to_snake_case(short_names[0].lstrip("-"))
 
     def convert_to_argument(self):
         if not isinstance(self.name, list) and not isinstance(self.name, tuple):

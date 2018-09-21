@@ -1,7 +1,7 @@
 
 import pytest
 from chuda.app import App
-from .utils import pipoargv, new_argv
+from .utils import cli_args
 
 
 TEST_STRING = "Test"
@@ -28,41 +28,48 @@ def test_output(capsys):
     assert stdout == TEST_STRING+"\n"
 
 
-@new_argv(
+@cli_args(
     [TEST_STRING, "--quiet"],
     [TEST_STRING, "-q"]
 )
-def test_quiet(capsys):
+def test_quiet(capsys, argv):
     app = BasicApp()
     app.run()
     stdout, _ = capsys.readouterr()
     assert stdout == ""
 
 
-@pipoargv(TEST_STRING, "--version")
-def test_version(capsys):
+@cli_args([TEST_STRING, "--version"])
+def test_version(capsys, argv):
     app = BasicApp()
     app.run()
     stdout, _ = capsys.readouterr()
     assert stdout == "{}: {}\n".format(app.app_name, app.version)
 
 
-@pipoargv(
+@cli_args(
     [TEST_STRING, "--verbose"],
     [TEST_STRING, "-v"]
 )
-def test_verbose(capsys):
+def test_verbose(capsys, argv):
     app = BasicApp()
     app.run()
     stdout, _ = capsys.readouterr()
     assert stdout == "{}\n{}\n".format(TEST_STRING, TEST_STRING)
 
 
-@pipoargv(
+@cli_args(
     [TEST_STRING, "--help"],
     [TEST_STRING, "-h"]
 )
-def test_help():
+def test_help(argv):
     with pytest.raises(SystemExit):
         app = BasicApp()
         app.run()
+
+class NoDefaultArgsApp(App):
+    override_default_arguments = True
+
+    def main(self):
+        self.logger.info(TEST_STRING)
+
