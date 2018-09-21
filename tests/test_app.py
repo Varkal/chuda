@@ -6,12 +6,14 @@ from .utils import cli_args
 
 TEST_STRING = "Test"
 
+
 class BasicApp(App):
     app_name = "basic_app"
 
     def main(self):
         self.logger.debug(TEST_STRING)
         self.logger.info(TEST_STRING)
+
 
 @cli_args(
     [TEST_STRING]
@@ -21,6 +23,7 @@ def test_run_call_main(mocker, argv):
     mocker.spy(app, "main")
     app.run()
     assert getattr(app.main, "call_count") == 1
+
 
 @cli_args(
     [TEST_STRING]
@@ -71,6 +74,7 @@ def test_help(argv):
         app = BasicApp()
         app.run()
 
+
 @cli_args(
     [TEST_STRING, "--verbose"],
     [TEST_STRING, "-v"],
@@ -88,5 +92,3 @@ def test_no_default_args(argv):
     with pytest.raises(SystemExit):
         app = NoDefaultArgsApp()
         app.run()
-
-
