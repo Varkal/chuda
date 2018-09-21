@@ -20,6 +20,7 @@ rope = "*"
 "doc8" = "*"
 pygments = "*"
 sphinx-rtd-theme = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.6"

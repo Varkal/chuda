@@ -1,6 +1,9 @@
-from chuda import App, Parameter, Option
+from pathlib import Path
 import pytest
+
+from chuda import App, Parameter, Option
 from .utils import cli_args
+
 
 TEST_STRING = "test_value"
 
@@ -44,28 +47,31 @@ def test_basic_arguments(capsys, argv):
     ]
 )
 def test_type_params(param):
-    class InvalidArgApp(App):
+    class InvalidParamApp(App):
         arguments = [param]
 
     with pytest.raises(TypeError):
-        InvalidArgApp().run()
+        InvalidParamApp().run()
+
 
 @pytest.mark.parametrize(
-    "option", [
-        Option("test_param"),
-        Option(1),
-        Option(-1),
-        Option({}),
-        Option(False),
-        Option(True),
+    "option, exception_type", [
+        [Option("test_param"), TypeError],
+        [Option(1), TypeError],
+        [Option(-1), TypeError],
+        [Option({}), TypeError],
+        [Option(False), TypeError],
+        [Option(True), TypeError],
+        [Option([]), ValueError],
     ]
 )
-def test_type_options(option):
-    class InvalidArgApp(App):
+def test_type_options(option, exception_type):
+    class InvalidOptionApp(App):
         arguments = [option]
 
-    with pytest.raises(TypeError):
-        InvalidArgApp().run()
+    with pytest.raises(exception_type):
+        InvalidOptionApp().run()
+
 
 @pytest.mark.parametrize(
     "option_names, expected", [
@@ -82,3 +88,23 @@ def test_type_options(option):
 )
 def test_get_default_name(option_names, expected):
     assert Option(option_names).get_default_name() == expected
+
+
+@cli_args(
+    [TEST_STRING]
+)
+def test_path_values(capsys, argv):
+    test_path = "/tmp/test"
+
+    class PathApp(App):
+        arguments = [
+            Option(["--path"], default=Path(test_path))
+        ]
+
+        def main(self):
+            self.logger.info(self.arguments.path)
+
+    PathApp().run()
+
+    stdout, _ = capsys.readouterr()
+    assert stdout == "{}\n".format(test_path)

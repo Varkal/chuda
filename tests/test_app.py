@@ -13,15 +13,19 @@ class BasicApp(App):
         self.logger.debug(TEST_STRING)
         self.logger.info(TEST_STRING)
 
-
-def test_run_call_main(mocker):
+@cli_args(
+    [TEST_STRING]
+)
+def test_run_call_main(mocker, argv):
     app = BasicApp()
     mocker.spy(app, "main")
     app.run()
     assert getattr(app.main, "call_count") == 1
 
-
-def test_output(capsys):
+@cli_args(
+    [TEST_STRING]
+)
+def test_output(capsys, argv):
     app = BasicApp()
     app.run()
     stdout, _ = capsys.readouterr()
@@ -67,9 +71,22 @@ def test_help(argv):
         app = BasicApp()
         app.run()
 
-class NoDefaultArgsApp(App):
-    override_default_arguments = True
+@cli_args(
+    [TEST_STRING, "--verbose"],
+    [TEST_STRING, "-v"],
+    [TEST_STRING, "--quiet"],
+    [TEST_STRING, "-q"],
+    [TEST_STRING, "--version"],
+)
+def test_no_default_args(argv):
+    class NoDefaultArgsApp(App):
+        override_default_arguments = True
 
-    def main(self):
-        self.logger.info(TEST_STRING)
+        def main(self):
+            self.logger.info(TEST_STRING)
+
+    with pytest.raises(SystemExit):
+        app = NoDefaultArgsApp()
+        app.run()
+
 
