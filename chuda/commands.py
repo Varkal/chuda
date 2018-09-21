@@ -25,7 +25,7 @@ class Command:
     #: Acceptable paths to find the configuration file.
     #: Stop searching on the first one exists
     config_path = []
-    
+
     #: Contains a reference to the :class:`~chuda.app.App` instance who contains this Command
     app = None
 
