@@ -185,7 +185,7 @@ class App:
         for plugin in self.plugins:
             if isinstance(plugin, type):
                 instance = plugin()
-                if not isinstance(plugin, Plugin):
+                if not isinstance(instance, Plugin):
                     raise TypeError("plugins should subclasse the Plugin class")
                 instance.setup(self)
                 instances.append(instance)
@@ -275,7 +275,7 @@ class App:
 
     def main(self):
         """
-        Main method of the application when the program is started without any subcommand selected. 
+        Main method of the application when the program is started without any subcommand selected.
         If this is not overrided, it will print the help
         """
         if not utils.get_flag(self.arguments, "quiet"):

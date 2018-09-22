@@ -75,17 +75,17 @@ class Option(Argument):
         name (list): Options can have multiple names, so name **must** be a list or a tuple
     '''
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return "<Option name={}>".format(self.name)
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         return "<Option name={}>".format(self.name)
 
     def get_default_name(self):
         '''
         Return the default generated name to store value on the parser for this option.
 
-        eg. An option *['-s', '--use-ssl']* will generate the *use_ssl* name 
+        eg. An option *['-s', '--use-ssl']* will generate the *use_ssl* name
 
         Returns:
             str: the default name of the option
@@ -96,7 +96,7 @@ class Option(Argument):
         if long_names:
             return to_snake_case(long_names[0].lstrip("-"))
 
-        return to_snake_case(short_names[0])
+        return to_snake_case(short_names[0].lstrip("-"))
 
     def convert_to_argument(self):
         if not isinstance(self.name, list) and not isinstance(self.name, tuple):
@@ -116,10 +116,10 @@ class Parameter(Argument):
         name (str): Parameter can have only one name, so it **must** be a string
     '''
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return "<Parameter name={}>".format(self.name)
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         return "<Parameter  name={}>".format(self.name)
 
     def convert_to_argument(self):
