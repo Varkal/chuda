@@ -9,8 +9,6 @@ argcomplete = "*"
 crayons = "*"
 pyyaml = "*"
 sphinx = "*"
-pytest = "*"
-pytest-mock = "*"
 
 [dev-packages]
 cached-property = "*"
@@ -21,6 +19,8 @@ rope = "*"
 pygments = "*"
 sphinx-rtd-theme = "*"
 pytest-cov = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [requires]
 python_version = "3.6"

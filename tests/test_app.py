@@ -92,3 +92,4 @@ def test_no_default_args(argv):
     with pytest.raises(SystemExit):
         app = NoDefaultArgsApp()
         app.run()
+
