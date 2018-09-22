@@ -28,20 +28,16 @@ jobs:
           paths:
             - ~/.local
             - ~/.cache
-        
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
+      
       - run:
           name: run tests
           command: |
-            pytest --junitxml=test-reports/output.xml --cov chuda --cov-report xml
+            pipenv run pytest --junitxml=test-reports/output.xml --cov chuda --cov-report xml
 
       - store_artifacts:
           path: test-reports/
           destination: tr1
+
       - store_test_results:
           path: test-reports/
           
