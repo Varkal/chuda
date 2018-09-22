@@ -21,6 +21,7 @@ sphinx-rtd-theme = "*"
 pytest-cov = "*"
 pytest = "*"
 pytest-mock = "*"
+codecov = "*"
 
 [scripts]
 clean = "rm -rf chuda.egg-info dist"

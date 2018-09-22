@@ -38,6 +38,15 @@ jobs:
           path: test-reports/
           destination: tr1
 
+      - store_artifacts:
+          path: coverage.xml
+          destination: tr1
+
       - store_test_results:
           path: test-reports/
+
+      - run:
+          name: upload coverage report
+          command: |
+            pipenv run codecov
           
