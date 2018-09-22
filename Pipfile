@@ -22,9 +22,6 @@ pytest-cov = "*"
 pytest = "*"
 pytest-mock = "*"
 
-[requires]
-python_version = "3.6"
-
 [scripts]
 clean = "rm -rf chuda.egg-info dist"
 build = "python setup.py sdist"
