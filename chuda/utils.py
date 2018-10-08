@@ -147,7 +147,7 @@ def _init_config(self):
             if self.config_parser.lower() == "yaml":
                 yaml = importlib.import_module("yaml")
                 with open(self.config_path, "r") as file:
-                    tmp = yaml.load(file.read())
+                    tmp = yaml.safe_load(file.read())
                     dict_merge(self.config, tmp)
 
             if self.config_parser.lower() == "json":
