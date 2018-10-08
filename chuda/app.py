@@ -122,8 +122,8 @@ class App:
             subcommands_dict[instance.command_name] = instance
             subparser = subparsers.add_parser(
                 instance.command_name,
-                help=instance.description,
-                description=instance.description
+                help=getattr(instance, "description", ""),
+                description=getattr(instance, "description", ""),
             )
             subparser.set_defaults(command=instance.command_name)
             if instance.merge_parent_arguments:

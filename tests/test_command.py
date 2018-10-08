@@ -51,7 +51,6 @@ def test_command(argv, capsys):
 def test_arguments_command(argv, capsys):
     class TestCommand(Command):
         command_name = COMMAND_NAMES[0]
-        description = TEST_STRING
 
         arguments = [
             Parameter("test_param"),
