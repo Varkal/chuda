@@ -2,6 +2,7 @@ import sys
 from .utils import _init_config
 from .arguments import Option, Parameter
 from .shell import Runner
+from .exceptions import EmptyCommandNameException, ArgumentNotFoundException
 
 
 class Command:
@@ -70,14 +71,14 @@ class Command:
                 value = getattr(self.arguments, name, None)
 
                 if value is None and declaration.required:
-                    raise AttributeError("Argument {} not found".format(name))
+                    raise ArgumentNotFoundException(name)
                 elif value is None:
                     default = getattr(declaration, "default", None)
                     setattr(self.arguments, name, default)
 
-        except AttributeError as error:
+        except ArgumentNotFoundException as error:
             self.logger.error("Cannot run \"{}\" command : \n\t{}".format(self.command_name, error))
-            return False
+            raise error
 
         return True
 
@@ -95,9 +96,8 @@ class Command:
         self.logger = app.logger
         self.shell.logger = self.logger
 
-        if self.command_name is None:
-            self.logger.error("The command_name attribute is required")
-            sys.exit(1)
+        if not self.command_name:
+            raise EmptyCommandNameException()
 
         self.app = app
         self.arguments_declaration = self.arguments

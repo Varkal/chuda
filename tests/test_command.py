@@ -2,6 +2,7 @@
 import re
 import pytest
 from chuda import App, Command, Parameter, Option
+from chuda.exceptions import EmptyCommandNameException, ArgumentNotFoundException
 from .utils import cli_args
 
 
@@ -88,7 +89,7 @@ def test_arguments_command(argv, capsys):
 @cli_args(
     [TEST_STRING, COMMAND_NAMES[1]],
 )
-def test_call_other_command(argv, capsys):
+def test_call_other_command(argv):
     class TestCommand(Command):
         command_name = COMMAND_NAMES[0]
         description = TEST_STRING
@@ -123,10 +124,9 @@ def test_call_other_command(argv, capsys):
         ]
 
     app = CommandApp()
-    app.run()
 
-    stdout, _ = capsys.readouterr()
-    assert re.match(".*Cannot run.*", stdout)  # TODO _check_arguments should raise an exception instead of logging
+    with pytest.raises(ArgumentNotFoundException):
+        app.run()
 
 
 @cli_args([TEST_STRING])
@@ -139,8 +139,8 @@ def test_command_must_have_name(argv):
             NoNameCommand
         ]
 
-    with pytest.raises(SystemExit):
-        NoNameApp().run()  # TODO should raise an exception instead of logging and exit
+    with pytest.raises(EmptyCommandNameException):
+        NoNameApp().run()
 
 
 @cli_args(
