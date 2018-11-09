@@ -59,6 +59,9 @@ class App:
     #: Should :attr:`~chuda.app.App.arguments` override default provided arguments ?
     override_default_arguments = False
 
+    #: Should :attr:`~chuda.app.App.arguments` be merged in subcommands instead of being accesibble globally  ?
+    merge_arguments_in_subcommands = True
+
     #: Instance of :class:`~argparse.ArgumentParser`
     parser = None
 
@@ -101,15 +104,16 @@ class App:
         if not self.override_default_arguments:
             self.arguments = self.default_arguments + self.arguments
 
-        for argument in self.arguments:
-            arg_tuple = argument.convert_to_argument()
-            if isinstance(arg_tuple[0], list):
-                parg = self.parser.add_argument(*arg_tuple[0], **arg_tuple[1])
-            else:
-                parg = self.parser.add_argument(arg_tuple[0], **arg_tuple[1])
+        if not self.merge_arguments_in_subcommands or not self.subcommands:
+            for argument in self.arguments:
+                arg_tuple = argument.convert_to_argument()
+                if isinstance(arg_tuple[0], list):
+                    parg = self.parser.add_argument(*arg_tuple[0], **arg_tuple[1])
+                else:
+                    parg = self.parser.add_argument(arg_tuple[0], **arg_tuple[1])
 
-            if argument.completer:
-                parg.completer = argument.completer
+                if argument.completer:
+                    parg.completer = argument.completer
 
         subcommands_dict = {}
         if self.subcommands:
@@ -126,7 +130,7 @@ class App:
                 description=getattr(instance, "description", ""),
             )
             subparser.set_defaults(command=instance.command_name)
-            if instance.merge_parent_arguments:
+            if self.merge_arguments_in_subcommands and instance.merge_parent_arguments:
                 instance.arguments = self.arguments + instance.arguments
 
             for argument in instance.arguments:

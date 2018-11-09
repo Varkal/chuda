@@ -47,7 +47,7 @@ def test_command(argv, capsys):
 @cli_args(
     [TEST_STRING, COMMAND_NAMES[0], TEST_STRING],
     [TEST_STRING, COMMAND_NAMES[0], TEST_STRING, "--test-option", TEST_STRING],
-    [TEST_STRING, COMMAND_NAMES[0], TEST_STRING, "--test-option", TEST_STRING, "--parent-option", TEST_STRING],
+    [TEST_STRING, COMMAND_NAMES[0], TEST_STRING, "--test-option", TEST_STRING, "--parent-option", TEST_STRING]
 )
 def test_arguments_command(argv, capsys):
     class TestCommand(Command):
@@ -85,6 +85,62 @@ def test_arguments_command(argv, capsys):
     stdout, _ = capsys.readouterr()
     assert stdout == "{}\n{}\n{}\n".format(test_param, test_option, parent_option)
 
+@cli_args(
+    ["False", "--parent-option", TEST_STRING, COMMAND_NAMES[0], TEST_STRING, "--test-option", TEST_STRING],
+    ["True", COMMAND_NAMES[1], TEST_STRING, "--test-option", TEST_STRING]
+)
+def test_arguments_merging(argv, capsys):
+    class TestCommand(Command):
+        command_name = COMMAND_NAMES[0]
+
+        arguments = [
+            Parameter("test_param"),
+            Option(["--test-option"]),
+        ]
+
+        def main(self):
+            self.logger.info(self.arguments.test_param)
+            self.logger.info(self.arguments.test_option)
+            self.logger.info(self.arguments.parent_option)
+
+    class TestCommand2(Command):
+        command_name = COMMAND_NAMES[1]
+
+        arguments = [
+            Parameter("test_param"),
+            Option(["--test-option"]),
+        ]
+
+        merge_parent_arguments = False
+
+        def main(self):
+            self.logger.info(self.arguments.test_param)
+            self.logger.info(self.arguments.test_option)
+            self.logger.info(getattr(self.arguments, "parent_option", None))
+
+    class CommandApp(App):
+        app_name = TEST_STRING
+        description = TEST_STRING
+
+        arguments = [
+            Option(["--parent-option"]),
+        ]
+
+        merge_arguments_in_subcommands = argv[0] == "True"
+
+        subcommands = [
+            TestCommand, TestCommand2
+        ]
+
+    app = CommandApp()
+    app.run()
+
+    test_param = argv[2]
+    test_option = None if len(argv) < 4 else argv[4]
+    parent_option = None if len(argv) < 6 else argv[6]
+
+    stdout, _ = capsys.readouterr()
+    assert stdout == "{}\n{}\n{}\n".format(test_param, test_option, parent_option)
 
 @cli_args(
     [TEST_STRING, COMMAND_NAMES[1]],
