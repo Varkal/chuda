@@ -1,8 +1,18 @@
 '''
 Module with argparse utils for chuda
 '''
+import argparse
+
+from enum import Enum
 from pathlib import Path
 from .utils import to_snake_case
+
+
+class ArgumentQuantity(Enum):
+    OPTIONAL = "?"
+    MULTIPLE = "+"
+    MULTIPLE_OPTIONAL = "*"
+    REMAINDER = argparse.REMAINDER
 
 
 class Argument:
@@ -75,10 +85,10 @@ class Option(Argument):
         name (list): Options can have multiple names, so name **must** be a list or a tuple
     '''
 
-    def __repr__(self): # pragma: no cover
+    def __repr__(self):  # pragma: no cover
         return "<Option name={}>".format(self.name)
 
-    def __str__(self): # pragma: no cover
+    def __str__(self):  # pragma: no cover
         return "<Option name={}>".format(self.name)
 
     def get_default_name(self):
@@ -116,10 +126,10 @@ class Parameter(Argument):
         name (str): Parameter can have only one name, so it **must** be a string
     '''
 
-    def __repr__(self): # pragma: no cover
+    def __repr__(self):  # pragma: no cover
         return "<Parameter name={}>".format(self.name)
 
-    def __str__(self): # pragma: no cover
+    def __str__(self):  # pragma: no cover
         return "<Parameter  name={}>".format(self.name)
 
     def convert_to_argument(self):
