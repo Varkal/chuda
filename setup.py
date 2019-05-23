@@ -14,6 +14,7 @@ setup(
     version=VERSION,
     description='A simple framework to create CLI tools',
     long_description=README,
+    long_description_content_type="text/markdown",
     license='MIT',
     install_requires=[
         "argcomplete>=1.9.4",
