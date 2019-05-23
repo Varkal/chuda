@@ -6,7 +6,7 @@ try:
 except FileNotFoundError:
     README = ""
 
-VERSION = '0.0.22'
+VERSION = '0.0.23'
 
 setup(
     name='chuda',
