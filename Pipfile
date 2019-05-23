@@ -9,6 +9,7 @@ argcomplete = "*"
 crayons = "*"
 pyyaml = "*"
 sphinx = "*"
+sphinx-rtd-theme = "*"
 
 [dev-packages]
 cached-property = "*"
