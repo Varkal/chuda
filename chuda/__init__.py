@@ -6,5 +6,5 @@ from .app import App
 from .commands import Command
 from .decorators import autorun, signal_handler
 from .plugins import Plugin
-from .arguments import Option, Parameter
+from .arguments import Option, Parameter, ArgumentQuantity
 from .utils import LoggerMixin
