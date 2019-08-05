@@ -4,6 +4,7 @@ import subprocess
 import threading
 import re
 import signal
+import warnings
 import os
 
 NON_BLOCKING_ERROR_MESSAGE = "This method cannot be called on blocking shell commands"
@@ -11,6 +12,8 @@ NON_BLOCKING_ERROR_MESSAGE = "This method cannot be called on blocking shell com
 
 class ShellCommand():
     """
+    DEPRECATED: Please use `sh.py <https://amoffat.github.io/sh/>`_ instead
+
     Abstraction layer for shell subprocess
 
     You can disable stdout, stdin, stderr
@@ -29,6 +32,7 @@ class ShellCommand():
     """
 
     def __init__(self, command, logger, cwd=None, block=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
+        warnings.warn("Chuda Shell will be deprecated in next version. Please used `sh.py <https://amoffat.github.io/sh/>` instead", category=DeprecationWarning)
         self.command = shlex.split(command)
         self.block = block
         self.process = None
@@ -179,7 +183,7 @@ class ShellCommand():
             pattern(:class:`~re.Pattern`): The pattern to search
             timeout(int): Maximum number of second to wait. If None, wait infinitely
 
-        Raises: 
+        Raises:
             TimeoutError: When timeout is reach
         """
         should_continue = True

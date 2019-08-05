@@ -16,7 +16,6 @@ It will handle for you some basic stuff: parse configuration file, logging, argu
 * Represent commands and argparse arguments by Python classes
 * Handle parsing of a configuration file for you (INI, JSON, or YAML with [pyyaml](https://github.com/yaml/pyyaml))
 * Provide you a configurable logger, and some basic options to quiet/verbose mode
-* Provide you a simple interface to run some shell commands
 * Signals handling by decorator
 
 ## Documentation ##

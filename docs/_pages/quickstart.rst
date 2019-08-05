@@ -177,36 +177,6 @@ an other subcommand :
             SecondCommand
         ]
 
-Run shell commands
-------------------
-
-Chuda gives you a simple interface to interop with other shell utils
-
-.. code-block:: python
-
-    from chuda import App, autorun
-
-    @autorun()
-    class ShellSyncApp(App):
-        def main(self):
-            process = self.shell.run("ls")
-            self.logger.info(process.output)
-
-If you want to perform a long-running job, you can start it asynchronously
-
-.. code-block:: python
-
-    from chuda import App, autorun
-    import time
-
-    @autorun()
-    class ShellAsyncApp(App):
-        def main(self):
-            process = self.shell.run("sleep 3", block=False)
-            while process.is_running():
-                self.logger.info("Do something...")
-                time.sleep(1)
-
 Add plugins
 -----------
 
