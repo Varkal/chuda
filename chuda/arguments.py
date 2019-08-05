@@ -9,10 +9,30 @@ from .utils import to_snake_case
 
 
 class ArgumentQuantity(Enum):
+    '''
+    Enum with all special nargs values accepted by :meth:`~argparse.ArgumentParser.add_argument`
+    '''
+
     OPTIONAL = "?"
     MULTIPLE = "+"
     MULTIPLE_OPTIONAL = "*"
     REMAINDER = argparse.REMAINDER
+
+
+class ArgumentAction(Enum):
+    '''
+    Enum with all special actions values accepted by :meth:`~argparse.ArgumentParser.add_argument`
+    '''
+
+    STORE = "store"
+    STORE_CONST = "store_const"
+    STORE_TRUE = "store_true"
+    STORE_FALSE = "store_false"
+    APPEND = "append"
+    APPEND_CONST = "append_const"
+    COUNT = "count"
+    HELP = "help"
+    VERSION = "version"
 
 
 class Argument:
@@ -23,7 +43,7 @@ class Argument:
     '''
 
     name = None
-    action = "store"
+    action = ArgumentAction.STORE
     nargs = None
     const = None
     default = None
