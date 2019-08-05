@@ -99,8 +99,6 @@ An :class:`~chuda.arguments.Option` represent an UNIX style option ("e.g: git co
 A :class:`~chuda.arguments.Parameter` represent a simple parameter ("e.g: git checkout **stuff**")
 
 Both takes the same parameters as the :meth:`~argparse.ArgumentParser.add_argument` method.
-Additionaly, they take a :attr:`~chuda.arguments.Argument.completer` attribute use by
-`argcomplete <https://argcomplete.readthedocs.io/en/latest/>`_
 
 By default, chuda proposes three basic options :
 

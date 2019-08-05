@@ -18,7 +18,6 @@ It will handle for you some basic stuff: parse configuration file, logging, argu
 * Provide you a configurable logger, and some basic options to quiet/verbose mode
 * Provide you a simple interface to run some shell commands
 * Signals handling by decorator
-* Integrates [argcomplete](https://argcomplete.readthedocs.io/en/latest/) by default
 
 ## Documentation ##
 
@@ -30,7 +29,7 @@ The documentation is accessible [here](http://chuda.readthedocs.io)
 
 import sys
 import signal
-from chuda import App, autorun, Command signal_handler, Option 
+from chuda import App, autorun, Command signal_handler, Option
 
 
 class FooSubcommand(Command):

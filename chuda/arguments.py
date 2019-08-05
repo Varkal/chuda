@@ -54,13 +54,9 @@ class Argument:
     metavar = None
     dest = None
 
-    #: Callable use by argcomplete to generate auto completion
-    #: (see `arcomplete documentation <https://argcomplete.readthedocs.io/en/latest/#specifying-completers>`_)
-    completer = None
-
     def __init__(self, name=None, action="store", nargs=None, const=None,
                  default=None, type=None, choices=None, required=None, help=None,  # pylint: disable=W0622
-                 metavar=None, dest=None, completer=None):
+                 metavar=None, dest=None):
         args = locals().copy()
         for key, value in args.items():
             if isinstance(value, Path):
@@ -77,7 +73,6 @@ class Argument:
         self.help = help
         self.metavar = metavar
         self.dest = dest
-        self.completer = completer
 
     def convert_to_argument(self):
         '''

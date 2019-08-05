@@ -11,7 +11,6 @@ Features
 * Provide you a configurable logger, and some basic options to quiet/verbose mode
 * Provide you a simple interface to run some shell commands
 * Signals handling by decorator
-* Integrates `argcomplete <https://argcomplete.readthedocs.io/en/latest/>`_ by default
 
 The User Guide
 --------------

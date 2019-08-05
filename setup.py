@@ -17,7 +17,6 @@ setup(
     long_description_content_type="text/markdown",
     license='MIT',
     install_requires=[
-        "argcomplete>=1.9.4",
         "crayons>=0.1.2"
     ],
     author='Romain Moreau',

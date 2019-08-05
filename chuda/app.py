@@ -3,7 +3,6 @@ import argparse
 import logging
 import logging.config
 import signal
-import argcomplete
 import chuda.utils as utils
 from .arguments import Option
 from .plugins import Plugin
@@ -85,16 +84,6 @@ class App:
     def __repr__(self):
         return "<ChudaApp app_name={}>".format(self.app_name)
 
-    def in_autocomplete_mode(self):
-        """
-        Check if you are currently in an autocomplete call
-
-        Returns:
-            bool: True if you are in an autocomplete call, else False
-
-        """
-        return "_ARGCOMPLETE" in os.environ
-
     def __init_arguments(self):
         self.parser = argparse.ArgumentParser(
             prog=self.app_name,
@@ -111,9 +100,6 @@ class App:
                     parg = self.parser.add_argument(*arg_tuple[0], **arg_tuple[1])
                 else:
                     parg = self.parser.add_argument(arg_tuple[0], **arg_tuple[1])
-
-                if argument.completer:
-                    parg.completer = argument.completer
 
         subcommands_dict = {}
         if self.subcommands:
@@ -139,14 +125,6 @@ class App:
                     sp_arg = subparser.add_argument(*arg_tuple[0], **arg_tuple[1])
                 else:
                     sp_arg = subparser.add_argument(arg_tuple[0], **arg_tuple[1])
-
-                if argument.completer:
-                    sp_arg.completer = argument.completer
-
-        argcomplete.autocomplete(
-            argument_parser=self.parser,
-            always_complete_options=False
-        )
 
         self.arguments_declaration = self.arguments
         self.arguments = self.parser.parse_args()
